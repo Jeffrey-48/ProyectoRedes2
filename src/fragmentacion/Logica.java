@@ -5,32 +5,35 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Logica {
+	
+	public static List<String[]> flagDes = new ArrayList<>();
 
 	public static void main(String[] args) {
-		Datagrama data = new Datagrama(548, "ICPM", "192.168.2.227", "192.168.2.222", 52276, 100);
+		Datagrama data = new Datagrama(548, "ICPM", "192.168.2.227", "192.168.2.222", 52276, 64);
 		int cant = (int) Math.ceil(((double) data.getLongitudTotal()) / ((double) 1500));
 		List<Fragmento> frags = fragmentar(data, cant, 1500);
 		List<int[]> listaDecimal = ordenarEncabezado(frags);
 		List<String[]> listaHexa = convertirHexadecimal(listaDecimal);
-		for (String[] strings : listaHexa) {
-			for (int i = 0; i < strings.length; i++) {
-				System.out.println(strings[i]);
-			}
-		}
 		List<String[]> listaHexaOrder = ordenHexa(listaHexa);
+		int cont = 0;
 		for (String[] strings : listaHexaOrder) {
 			for (int i = 0; i < strings.length; i++) {
-				System.out.print(strings[i]);
+				System.out.print(strings[i] + " ");
+				if (i==6) {
+					String[] fl = flagDes.get(cont);
+					strings[6]=fl[0];
+					strings[7]=fl[1];
+				}
 			}
 			System.out.println();
+			cont++;
 		}
-
 	}
 
 	private static List<String[]> ordenHexa(List<String[]> listaHexa) {
 		List<String[]> listaHexadecimal = new ArrayList<String[]>();
 		for (String[] strings : listaHexa) {
-			String[] hexa = new String[21];
+			String[] hexa = new String[20];
 			hexa[0] = strings[0] + strings[1];
 			hexa[1] = strings[2];
 			hexa[2] = strings[3].substring(0, 2);
@@ -38,21 +41,19 @@ public class Logica {
 			hexa[4] = strings[4].substring(0, 2);
 			hexa[5] = strings[4].substring(2, 4);
 			hexa[6] = strings[5] + strings[6];
-			hexa[7] = strings[7] + strings[8].substring(0,1);
-			hexa[8] = strings[8].substring(1, 3);
-			hexa[9] = strings[9];
-			System.out.println(hexa[6] + " -- " +hexa[7] + " -- " + hexa[8] + " -- " + hexa[9] + " -- " );
-			hexa[10] = strings[10];
+			hexa[7] = strings[8].substring(1, 3);
+			hexa[8] = strings[9];
+			hexa[9] = strings[10];
+			hexa[10] = strings[11] + "0";
 			hexa[11] = strings[11] + "0";
-			hexa[12] = strings[11] + "0";
-			hexa[13] = strings[12];
-			hexa[14] = strings[13];
-			hexa[15] = strings[14];
-			hexa[16] = strings[15];
-			hexa[17] = strings[16];
-			hexa[18] = strings[17];
-			hexa[19] = strings[18];
-			hexa[20] = strings[19];
+			hexa[12] = strings[12];
+			hexa[13] = strings[13];
+			hexa[14] = strings[14];
+			hexa[15] = strings[15];
+			hexa[16] = strings[16];
+			hexa[17] = strings[17];
+			hexa[18] = strings[18];
+			hexa[19] = strings[19];
 			listaHexadecimal.add(hexa);
 		}
 		return listaHexadecimal;
@@ -84,6 +85,8 @@ public class Logica {
 			encabezado[17] = Integer.parseInt(obtetosDest[1]);
 			encabezado[18] = Integer.parseInt(obtetosDest[2]);
 			encabezado[19] = Integer.parseInt(obtetosDest[3]);
+			String[] casillasDyF = convertirhexaDesplazFlag(0,fragmento.getdF(),fragmento.getmF(),fragmento.getDesplazamiento());
+			flagDes.add(casillasDyF);
 			listaDecimal.add(encabezado);
 		}
 		return listaDecimal;
@@ -219,7 +222,7 @@ public class Logica {
 				longitud = mtu;
 				longitudFragmento -= longitud;
 				Fragmento ndt = new Fragmento(longitud, dt.getProtocolo(), dt.getIpOrigen(), dt.getIpDestino(),
-						identificacion, dt.getTiempoDeVida() - 1, 0, 1, desplazamiento, 0);
+						identificacion, dt.getTiempoDeVida(), 0, 1, desplazamiento, 0);
 				datas.add(ndt);
 				desplazamiento += longitud;
 			} else {
@@ -227,14 +230,15 @@ public class Logica {
 					longitud = longitudFragmento;
 					longitudFragmento -= longitud;
 					Fragmento ndt = new Fragmento(longitud, dt.getProtocolo(), dt.getIpOrigen(), dt.getIpDestino(),
-							identificacion, dt.getTiempoDeVida() - 1, 0, 0, desplazamiento, 0);
+							identificacion, dt.getTiempoDeVida(), 0, 0, desplazamiento+longitud-20, 0);
+					desplazamiento += longitud;
 					datas.add(ndt);
 				} else {
 					longitud = longitudFragmento;
 					longitudFragmento -= longitud;
 					desplazamiento += longitud;
 					Fragmento ndt = new Fragmento(longitud, dt.getProtocolo(), dt.getIpOrigen(), dt.getIpDestino(),
-							identificacion, dt.getTiempoDeVida() - 1, 0, 0, desplazamiento, 0);
+							identificacion, dt.getTiempoDeVida(), 0, 0, desplazamiento, 0);
 					datas.add(ndt);
 				}
 			}
@@ -244,7 +248,7 @@ public class Logica {
 		}
 		return datas;
 	}
-
+	
 	public static String convertirDecimalABinarioManual(long decimal) {
 		if (decimal <= 0) {
 			return "0";
@@ -256,6 +260,22 @@ public class Logica {
 			binario.insert(0, String.valueOf(residuo));
 		}
 		return binario.toString();
+	}
+	
+	public static String[] convertirhexaDesplazFlag(int flag0, int df, int mf, int desplazamiento) {
+		String arrSalida[] = new String [2];
+		String desp = convertirDecimalABinarioManual(desplazamiento) + "0";
+		int desplaza = Integer.parseInt(desp,2);
+		String desplaHexa = Integer.toHexString(desplaza);
+		String digitoExtra = desplaHexa.charAt(desplaHexa.length()-1) + "";
+		int flag = Integer.parseInt(flag0 + "" + df + "" + mf,2);
+		String flagL = Integer.toHexString(flag) + digitoExtra;
+		if (desplaHexa.length()<2) {
+			desplaHexa+= "0";
+		}
+		arrSalida[0]=flagL;
+		arrSalida[1]=desplaHexa.substring(0,2);
+		return arrSalida;
 	}
 
 }
