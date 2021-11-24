@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="616.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.VentanaPrincipal">
+   <children>
+      <TextField fx:id="txtIpOrigen" layoutX="147.0" layoutY="60.0" pickOnBounds="false" prefHeight="25.0" prefWidth="149.0" />
+      <TextField fx:id="txtLongitudT" layoutX="256.0" layoutY="90.0" prefHeight="25.0" prefWidth="169.0" />
+      <RadioButton fx:id="btnRadioICMP" layoutX="105.0" layoutY="124.0" mnemonicParsing="false" selected="true" text="ICMP">
+         <toggleGroup>
+            <ToggleGroup fx:id="groupRadioButton" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="btnRadioTCP" layoutX="159.0" layoutY="124.0" mnemonicParsing="false" text="TCP" toggleGroup="$groupRadioButton" />
+      <RadioButton fx:id="btnRadioUDP" layoutX="207.0" layoutY="124.0" mnemonicParsing="false" text="UDP" toggleGroup="$groupRadioButton" />
+      <TextField fx:id="txtIdentificacion" disable="true" editable="false" layoutX="416.0" layoutY="120.0" prefHeight="25.0" prefWidth="169.0" />
+      <TextField fx:id="txtVersion" alignment="CENTER" disable="true" editable="false" layoutX="150.0" layoutY="150.0" prefHeight="25.0" prefWidth="41.0" text="4">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></TextField>
+      <TextField fx:id="txtTimeLive" disable="true" editable="false" layoutX="531.0" layoutY="90.0" prefHeight="25.0" prefWidth="54.0" />
+      <TextField fx:id="txtMtu" layoutX="70.0" layoutY="90.0" prefHeight="25.0" prefWidth="87.0" />
+      <TextField fx:id="txtLongitudEncabezado" alignment="CENTER" disable="true" editable="false" layoutX="352.0" layoutY="150.0" prefHeight="25.0" prefWidth="41.0" text="5">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></TextField>
+      <TextField fx:id="txtDiferenciado" alignment="CENTER" disable="true" editable="false" layoutX="539.0" layoutY="150.0" prefHeight="25.0" prefWidth="44.0" promptText="0">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></TextField>
+      <TextField fx:id="txtIpDestino" layoutX="426.0" layoutY="60.0" prefHeight="25.0" prefWidth="160.0" />
+      <Label layoutX="229.0" layoutY="16.0" text="DATAGRAMA IP">
+         <font>
+            <Font name="Calibri Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="306.0" layoutY="65.0" text="DIRECCIÓN IP DESTINO">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="33.0" layoutY="65.0" text="DIRECCIÓN IP ORIGEN">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="95.0" text="MTU">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="163.0" layoutY="95.0" text="LONGITUD TOTAL">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="125.0" text="PROTOCOLO">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="437.0" layoutY="95.0" text="TIEMPO DE VIDA">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="265.0" layoutY="125.0" text="NUMERO DE IDENTIFICACIÓN">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="34.0" layoutY="155.0" text="VERSIÓN DATAGRAMA">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="202.0" layoutY="155.0" text="LONGITUD DEL ENCABEZADO">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="401.0" layoutY="156.0" text="SERVICIOS DIFERENCIADOS">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="txtAreaResultados" editable="false" layoutX="27.0" layoutY="214.0" prefHeight="128.0" prefWidth="563.0" />
+      <Button fx:id="btnFormatoBinario" layoutX="188.0" layoutY="183.0" mnemonicParsing="false" onAction="#actionBinario" prefHeight="22.0" prefWidth="149.0" text="ANALISÍS FORMATO BINARIO">
+         <font>
+            <Font name="Calibri" size="11.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnLimpiar" layoutX="529.0" layoutY="183.0" mnemonicParsing="false" onAction="#actionLimpiar" prefHeight="22.0" prefWidth="54.0" text="LIMPIAR">
+         <font>
+            <Font name="Calibri" size="11.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnFormatoHexadecimal" layoutX="344.0" layoutY="183.0" mnemonicParsing="false" onAction="#actionHexa" prefHeight="22.0" prefWidth="180.0" text="ANALISÍS FORMATO HEXADECIMAL">
+         <font>
+            <Font name="Calibri" size="11.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnFormatoLegible" layoutX="34.0" layoutY="183.0" mnemonicParsing="false" onAction="#actionLegible" prefHeight="22.0" prefWidth="149.0" text="ANALISÍS FORMATO LEGIBLE">
+         <font>
+            <Font name="Calibri" size="11.0" />
+         </font>
+      </Button>
+      <Separator layoutX="256.0" layoutY="121.0" orientation="VERTICAL" prefHeight="22.0" prefWidth="4.0" />
+      <Separator layoutX="97.0" layoutY="121.0" orientation="VERTICAL" prefHeight="22.0" prefWidth="4.0" />
+   </children>
+</Pane>

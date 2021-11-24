@@ -1,29 +1,32 @@
 package fragmentacion;
 
 public class Datagrama {
-	
+
 	private int longitudTotal;
 	private String protocolo;
 	private String ipOrigen;
 	private String ipDestino;
 	private int numeroIdentificacion;
 	private int tiempoDeVida;
+	private int mtu;
 	private static final int version = 4;
 	private static final int longitudEncabezado = 5;
 	private static final int serviciosDiferenciados = 0;
-	
+
 	public Datagrama() {
 
 	}
-	
+
 	public Datagrama(int longitudTotal, String protocolo, String ipOrigen, String ipDestino,
-			int numeroIdentificacion, int tiempoDeVida) {
+			int numeroIdentificacion, int tiempoDeVida, int mtu) {
+		super();
 		this.longitudTotal = longitudTotal;
 		this.protocolo = protocolo;
 		this.ipOrigen = ipOrigen;
 		this.ipDestino = ipDestino;
 		this.numeroIdentificacion = numeroIdentificacion;
 		this.tiempoDeVida = tiempoDeVida;
+		this.mtu = mtu;
 	}
 
 	public int getLongitudTotal() {
@@ -74,6 +77,14 @@ public class Datagrama {
 		this.tiempoDeVida = tiempoDeVida;
 	}
 
+	public int getMtu() {
+		return mtu;
+	}
+
+	public void setMtu(int mtu) {
+		this.mtu = mtu;
+	}
+
 	public static int getVersion() {
 		return version;
 	}
@@ -88,9 +99,10 @@ public class Datagrama {
 
 	@Override
 	public String toString() {
-		return "Datagrama [longitudTotal=" + longitudTotal + ", protocolo=" + protocolo + ", ipOrigen="
-				+ ipOrigen + ", ipDestino=" + ipDestino + ", numeroIdentificacion=" + numeroIdentificacion
-				+ ", tiempoDeVida=" + tiempoDeVida + ", version=" + version + ", longitud de encabezado=" + longitudEncabezado + ", servicios diferenciados=" + serviciosDiferenciados + "]";
+		return "Datagrama [longitudTotal=" + longitudTotal + ", protocolo=" + protocolo + ", ipOrigen=" + ipOrigen
+				+ ", ipDestino=" + ipDestino + ", numeroIdentificacion=" + numeroIdentificacion + ", tiempoDeVida="
+				+ tiempoDeVida + ", version=" + version + ", longitud de encabezado=" + longitudEncabezado
+				+ ", servicios diferenciados=" + serviciosDiferenciados + "]";
 	}
 
 }

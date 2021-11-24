@@ -1,7 +1,6 @@
 package fragmentacion;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Logica {
@@ -9,7 +8,7 @@ public class Logica {
 	public static List<String[]> flagDes = new ArrayList<>();
 
 	public static void main(String[] args) {
-		Datagrama data = new Datagrama(548, "ICPM", "192.168.2.227", "192.168.2.222", 52276, 64);
+		Datagrama data = new Datagrama(548, "ICPM", "192.168.2.227", "192.168.2.222", 52276, 64,1500);
 		int cant = (int) Math.ceil(((double) data.getLongitudTotal()) / ((double) 1500));
 		List<Fragmento> frags = fragmentar(data, cant, 1500);
 		List<int[]> listaDecimal = ordenarEncabezado(frags);
@@ -63,12 +62,12 @@ public class Logica {
 		List<int[]> listaDecimal = new ArrayList<>();
 		for (Fragmento fragmento : frags) {
 			int encabezado[] = new int[20];
-			encabezado[0] = fragmento.getVersion();
-			encabezado[1] = fragmento.getLongitudencabezado();
-			encabezado[2] = fragmento.getServiciosdiferenciados();
+			encabezado[0] = Fragmento.getVersion();
+			encabezado[1] = Fragmento.getLongitudencabezado();
+			encabezado[2] = Fragmento.getServiciosdiferenciados();
 			encabezado[3] = fragmento.getLongitudTotal();
 			encabezado[4] = fragmento.getNumeroIdentificacion();
-			encabezado[5] = fragmento.getFlagcero();
+			encabezado[5] = Fragmento.getFlagcero();
 			encabezado[6] = fragmento.getdF();
 			encabezado[7] = fragmento.getmF();
 			encabezado[8] = fragmento.getDesplazamiento();
@@ -206,16 +205,13 @@ public class Logica {
 		return retorno;
 	}
 
-	private static List<Fragmento> calcularSumas(List<Fragmento> frags) {
 
-		return null;
-	}
 
 	public static List<Fragmento> fragmentar(Datagrama dt, int cant, int mtu) {
 		List<Fragmento> datas = new ArrayList<>();
 		int longitud = 0;
 		int desplazamiento = 0;
-		int identificacion = dt.getNumeroIdentificacion();
+		int identificacion = (int) dt.getNumeroIdentificacion();
 		int longitudFragmento = dt.getLongitudTotal();
 		for (int i = 0; i < cant; i++) {
 			if (i != cant - 1) {
@@ -277,5 +273,21 @@ public class Logica {
 		arrSalida[1]=desplaHexa.substring(0,2);
 		return arrSalida;
 	}
+	
+	public boolean esNumero(String n) {
+        try {
+            Integer.parseInt(n);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+	
+	public int generarIdentificacion() {
+		return (int) Math.floor(Math.random()*(65535-0+1)+0);
+    }
 
+	public int generarTiempoDeVida() {
+		return (int) Math.floor(Math.random()*(255-0+1)+0);
+    }
 }
