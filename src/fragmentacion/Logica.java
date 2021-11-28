@@ -38,11 +38,7 @@ public class Logica {
 			}
 		}
 		List<String[]> listaBinary = convertirDecimal(listaHexaOrder);
-		for (String[] strings : listaBinary) {
-			for (int i = 0; i < strings.length; i++) {
-				System.out.println(strings[i]);
-			}
-		}
+		
 	}
 	
 	public static List<String[]> convertirDecimal( List<String[]> listaHexa) {
@@ -52,8 +48,7 @@ public class Logica {
 			for (int i = 0; i < strings.length; i++) {
 				String cad1 = binary(strings[i].substring(0,1));
 				String cad2 = binary(strings[i].substring(1,2));
-				cad1 = ordenar(cad1);
-				cad2 = ordenar(cad2);
+
 				cadenaBinary[i] = cad1 + " " + cad2;
 			}
 			listaDecimales.add(cadenaBinary);
@@ -398,9 +393,6 @@ public class Logica {
 					datas.add(ndt);
 				}
 			}
-		}
-		for (Fragmento datagrama : datas) {
-			System.out.println(datagrama.toString());
 		}
 		return datas;
 	}

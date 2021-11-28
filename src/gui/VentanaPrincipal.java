@@ -228,6 +228,39 @@ public class VentanaPrincipal implements Initializable {
 	@FXML
 	void actionLegible(ActionEvent event) {
 		txtAreaResultados.setText("");
+		txtAreaResultados.setText("");
+		if (logica.esNumero(txtLongitudT.getText()) && logica.esNumero(txtMtu.getText())) {
+			String direccionOrigen = txtIpOrigen.getText();
+			String direccionDestino = txtIpDestino.getText();
+			int longTotal = Integer.parseInt(txtLongitudT.getText());
+			int mtu = Integer.parseInt(txtMtu.getText());
+
+			String protocolo = "";
+			if (btnRadioICMP.isSelected()) {
+				protocolo = "ICMP";
+			} else if (btnRadioTCP.isSelected()) {
+				protocolo = "TCP";
+			} else {
+				protocolo = "UDP";
+			}
+
+			int identificacion = logica.generarIdentificacion();
+			int tiempoVida = logica.generarTiempoDeVida();
+
+			txtTimeLive.setText(tiempoVida + "");
+			txtIdentificacion.setText(identificacion + "");
+
+			Datagrama datagrama = new Datagrama(longTotal, protocolo, direccionOrigen, direccionDestino, identificacion,
+					tiempoVida, mtu);
+			int cant = (int) Math.ceil(((double) longTotal) / ((double) mtu));
+			List<Fragmento> frags = logica.fragmentar(datagrama, cant, mtu);
+			String texto = "";
+			for (Fragmento fragmento : frags) {
+				texto += fragmento.toString() + "\n"; 
+			}
+			txtAreaResultados.setText(texto);
+
+		}
 	}
 
 	public Stage getStage() {
