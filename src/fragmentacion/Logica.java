@@ -1,6 +1,7 @@
 package fragmentacion;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.w3c.dom.stylesheets.LinkStyle;
@@ -36,7 +37,48 @@ public class Logica {
 				}
 			}
 		}
+		List<String[]> listaBinary = convertirDecimal(listaHexaOrder);
+		for (String[] strings : listaBinary) {
+			for (int i = 0; i < strings.length; i++) {
+				System.out.println(strings[i]);
+			}
+		}
 	}
+	
+	public static List<String[]> convertirDecimal( List<String[]> listaHexa) {
+		List<String[]> listaDecimales = new ArrayList<>();
+		String cadenaBinary[] = new String [20];
+		for (String[] strings : listaHexa) {
+			for (int i = 0; i < strings.length; i++) {
+				String cad1 = binary(strings[i].substring(0,1));
+				String cad2 = binary(strings[i].substring(1,2));
+				cad1 = ordenar(cad1);
+				cad2 = ordenar(cad2);
+				cadenaBinary[i] = cad1 + " " + cad2;
+			}
+			listaDecimales.add(cadenaBinary);
+		}
+		return listaDecimales;
+	}
+	
+	public static String ordenar (String pal) {
+		if (pal.length() == 1) {
+			pal = "000" + pal; 
+		}
+		if (pal.length() == 2) {
+			pal = "00" + pal; 
+		}
+		if (pal.length() == 3) {
+			pal = "0" + pal; 
+		}
+		return pal;
+	}
+	
+	 public static String binary(String hexa) {
+	        int numHex = Integer.parseInt(hexa, 16);
+	        String binary = Integer.toBinaryString(numHex);
+	        return binary;
+	    }
 
 	public static List<String> sumaComprobacion(List<String[]> listaHexa) {
 		List<String> lista = new ArrayList<>();

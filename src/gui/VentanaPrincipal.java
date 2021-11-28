@@ -20,9 +20,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 public class VentanaPrincipal implements Initializable {
-	
+
 	Logica logica = new Logica();
-	
+
 	@FXML
 	Stage stage;
 
@@ -85,7 +85,65 @@ public class VentanaPrincipal implements Initializable {
 
 	@FXML
 	void actionBinario(ActionEvent event) {
-		txtAreaResultados.setText("");
+		if (logica.esNumero(txtLongitudT.getText()) && logica.esNumero(txtMtu.getText())) {
+			String direccionOrigen = txtIpOrigen.getText();
+			String direccionDestino = txtIpDestino.getText();
+			int longTotal = Integer.parseInt(txtLongitudT.getText());
+			int mtu = Integer.parseInt(txtMtu.getText());
+
+			String protocolo = "";
+			if (btnRadioICMP.isSelected()) {
+				protocolo = "ICMP";
+			} else if (btnRadioTCP.isSelected()) {
+				protocolo = "TCP";
+			} else {
+				protocolo = "UDP";
+			}
+
+			int identificacion = logica.generarIdentificacion();
+			int tiempoVida = logica.generarTiempoDeVida();
+
+			txtTimeLive.setText(tiempoVida + "");
+			txtIdentificacion.setText(identificacion + "");
+
+			Datagrama datagrama = new Datagrama(longTotal, protocolo, direccionOrigen, direccionDestino, identificacion,
+					tiempoVida, mtu);
+			int cant = (int) Math.ceil(((double) longTotal) / ((double) mtu));
+			List<Fragmento> frags = logica.fragmentar(datagrama, cant, mtu);
+			List<int[]> listaDecimal = logica.ordenarEncabezado(frags);
+			List<String[]> listaHexa = logica.convertirHexadecimal(listaDecimal);
+			List<String[]> listaHexaOrder = logica.ordenHexa(listaHexa);
+			int cont = 0;
+			String mensaje = "";
+			for (String[] strings : listaHexaOrder) {
+				for (int i = 0; i < strings.length; i++) {
+					if (i == 6) {
+						String[] fl = logica.flagDes.get(cont);
+						strings[6] = fl[0];
+						strings[7] = fl[1];
+					}
+				}
+				cont++;
+			}
+			List<String> sumas = logica.sumaComprobacion(listaHexaOrder);
+			for (int i = 0; i < listaHexaOrder.size(); i++) {
+				for (int j = 0; j < listaHexaOrder.get(i).length; j++) {
+					for (int j2 = 0; j2 < sumas.size(); j2++) {
+						listaHexaOrder.get(i)[10] = sumas.get(j2).substring(0, 2);
+						listaHexaOrder.get(i)[11] = sumas.get(j2).substring(2, 4);
+					}
+				}
+			}
+			List<String[]> listaBinary = logica.convertirDecimal(listaHexaOrder);
+			for (String[] strings : listaBinary) {
+				for (int i = 0; i < strings.length; i++) {
+					mensaje += strings[i] + " ";
+				}
+				mensaje += "\n";
+				cont++;
+			}
+			txtAreaResultados.setText(mensaje);
+		}
 	}
 
 	@FXML
@@ -136,20 +194,20 @@ public class VentanaPrincipal implements Initializable {
 			String mensaje = "";
 			for (String[] strings : listaHexaOrder) {
 				for (int i = 0; i < strings.length; i++) {
-					if (i==6) {
+					if (i == 6) {
 						String[] fl = logica.flagDes.get(cont);
-						strings[6]=fl[0];
-						strings[7]=fl[1];
+						strings[6] = fl[0];
+						strings[7] = fl[1];
 					}
 				}
 				cont++;
 			}
 			List<String> sumas = logica.sumaComprobacion(listaHexaOrder);
 			for (int i = 0; i < listaHexaOrder.size(); i++) {
-				for (int j = 0; j < listaHexaOrder.get(i).length ; j++) {
+				for (int j = 0; j < listaHexaOrder.get(i).length; j++) {
 					for (int j2 = 0; j2 < sumas.size(); j2++) {
-						listaHexaOrder.get(i)[10] = sumas.get(j2).substring(0,2);
-						listaHexaOrder.get(i)[11] = sumas.get(j2).substring(2,4);
+						listaHexaOrder.get(i)[10] = sumas.get(j2).substring(0, 2);
+						listaHexaOrder.get(i)[11] = sumas.get(j2).substring(2, 4);
 					}
 				}
 			}
