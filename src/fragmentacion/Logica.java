@@ -3,12 +3,14 @@ package fragmentacion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.w3c.dom.stylesheets.LinkStyle;
+
 public class Logica {
-	
+
 	public static List<String[]> flagDes = new ArrayList<>();
 
 	public static void main(String[] args) {
-		Datagrama data = new Datagrama(548, "ICPM", "192.168.2.227", "192.168.2.222", 52276, 64,1500);
+		Datagrama data = new Datagrama(548, "ICPM", "192.168.2.227", "192.168.2.222", 52276, 64, 1500);
 		int cant = (int) Math.ceil(((double) data.getLongitudTotal()) / ((double) 1500));
 		List<Fragmento> frags = fragmentar(data, cant, 1500);
 		List<int[]> listaDecimal = ordenarEncabezado(frags);
@@ -17,16 +19,133 @@ public class Logica {
 		int cont = 0;
 		for (String[] strings : listaHexaOrder) {
 			for (int i = 0; i < strings.length; i++) {
-				System.out.print(strings[i] + " ");
-				if (i==6) {
+				if (i == 6) {
 					String[] fl = flagDes.get(cont);
-					strings[6]=fl[0];
-					strings[7]=fl[1];
+					strings[6] = fl[0];
+					strings[7] = fl[1];
 				}
 			}
-			System.out.println();
 			cont++;
 		}
+		List<String> sumas = sumaComprobacion(listaHexaOrder);
+		for (int i = 0; i < listaHexaOrder.size(); i++) {
+			for (int j = 0; j < listaHexaOrder.get(i).length ; j++) {
+				for (int j2 = 0; j2 < sumas.size(); j2++) {
+					listaHexaOrder.get(i)[10] = sumas.get(j2).substring(0,2);
+					listaHexaOrder.get(i)[11] = sumas.get(j2).substring(2,4);
+				}
+			}
+		}
+	}
+
+	public static List<String> sumaComprobacion(List<String[]> listaHexa) {
+		List<String> lista = new ArrayList<>();
+		for (String[] fr : listaHexa) {
+			String[] listaHexSum = new String[10];
+			int cont = 0;
+			for (int i = 0; i < fr.length; i++) {
+				if (i + 1 < fr.length && i % 2 == 0) {
+					listaHexSum[cont] = fr[i] + "" + fr[i + 1];
+					cont++;
+				}
+			}
+			String hexa1 = "";
+			for (int i = 0; i < listaHexSum.length; i++) {
+				if (i != 5) {
+					if (i == 0) {
+						hexa1 = listaHexSum[0];
+					}
+					if (i > 0) {
+						hexa1 = sumarHexa(hexa1, listaHexSum[i]);
+					}
+				}
+			}
+			lista.add(hexa1);
+		}
+		return lista;
+
+	}
+
+	private static String sumarHexa(String hexa1, String hexa2) {
+		int uno[] = new int[4];
+		int cont1 = 0;
+		for (int i = 0; i < hexa1.length(); i++) {
+			String letra = hexa1.charAt(i) + "";
+			uno[cont1] = numeroLetra(letra);
+			cont1++;
+		}
+		int dos[] = new int[4];
+		int cont2 = 0;
+		for (int i = 0; i < hexa2.length(); i++) {
+			String letra = hexa2.charAt(i) + "";
+			dos[cont2] = numeroLetra(letra);
+			cont2++;
+		}
+		int suma[] = new int[4];
+		int cont3 = 0;
+		for (int i = 0; i < uno.length; i++) {
+			if (uno[i] + dos[i] > 15) {
+				suma[cont3] = uno[i] + dos[i] - 16;
+				cont3++;
+			} else {
+				suma[cont3] = uno[i] + dos[i];
+				cont3++;
+			}
+		}
+		String cadena = "";
+		for (int i = 0; i < suma.length; i++) {
+			if (suma[i] > 9) {
+				if (suma[i] == 10) {
+					cadena += "a";
+				}
+				if (suma[i] == 11) {
+					cadena += "b";
+				}
+				if (suma[i] == 12) {
+					cadena += "c";
+				}
+				if (suma[i] == 13) {
+					cadena += "d";
+				}
+				if (suma[i] == 14) {
+					cadena += "e";
+				}
+				if (suma[i] == 15) {
+					cadena += "f";
+				}
+			} else {
+				cadena += suma[i];
+			}
+		}
+		return cadena;
+	}
+
+	public static int numeroLetra(String letra) {
+		int retor = 0;
+		if (letra.equals("a")) {
+			retor = 10;
+		}
+		if (letra.equals("b")) {
+			retor = 11;
+		}
+		if (letra.equals("c")) {
+			retor = 12;
+		}
+		if (letra.equals("d")) {
+			retor = 13;
+		}
+		if (letra.equals("e")) {
+			retor = 14;
+		}
+		if (letra.equals("f")) {
+			retor = 15;
+		}
+		if (letra.equals("0") || letra.equals("1") || letra.equals("2") || letra.equals("3") || letra.equals("4")
+				|| letra.equals("5") || letra.equals("6") || letra.equals("7") || letra.equals("8")
+				|| letra.equals("9")) {
+			retor = Integer.parseInt(letra);
+		}
+		return retor;
 	}
 
 	public static List<String[]> ordenHexa(List<String[]> listaHexa) {
@@ -84,7 +203,8 @@ public class Logica {
 			encabezado[17] = Integer.parseInt(obtetosDest[1]);
 			encabezado[18] = Integer.parseInt(obtetosDest[2]);
 			encabezado[19] = Integer.parseInt(obtetosDest[3]);
-			String[] casillasDyF = convertirhexaDesplazFlag(0,fragmento.getdF(),fragmento.getmF(),fragmento.getDesplazamiento());
+			String[] casillasDyF = convertirhexaDesplazFlag(0, fragmento.getdF(), fragmento.getmF(),
+					fragmento.getDesplazamiento());
 			flagDes.add(casillasDyF);
 			listaDecimal.add(encabezado);
 		}
@@ -205,8 +325,6 @@ public class Logica {
 		return retorno;
 	}
 
-
-
 	public static List<Fragmento> fragmentar(Datagrama dt, int cant, int mtu) {
 		List<Fragmento> datas = new ArrayList<>();
 		int longitud = 0;
@@ -226,7 +344,7 @@ public class Logica {
 					longitud = longitudFragmento;
 					longitudFragmento -= longitud;
 					Fragmento ndt = new Fragmento(longitud, dt.getProtocolo(), dt.getIpOrigen(), dt.getIpDestino(),
-							identificacion, dt.getTiempoDeVida(), 0, 0, desplazamiento+longitud-20, 0);
+							identificacion, dt.getTiempoDeVida(), 0, 0, desplazamiento + longitud - 20, 0);
 					desplazamiento += longitud;
 					datas.add(ndt);
 				} else {
@@ -244,7 +362,7 @@ public class Logica {
 		}
 		return datas;
 	}
-	
+
 	public static String convertirDecimalABinarioManual(long decimal) {
 		if (decimal <= 0) {
 			return "0";
@@ -257,37 +375,37 @@ public class Logica {
 		}
 		return binario.toString();
 	}
-	
+
 	public static String[] convertirhexaDesplazFlag(int flag0, int df, int mf, int desplazamiento) {
-		String arrSalida[] = new String [2];
+		String arrSalida[] = new String[2];
 		String desp = convertirDecimalABinarioManual(desplazamiento) + "0";
-		int desplaza = Integer.parseInt(desp,2);
+		int desplaza = Integer.parseInt(desp, 2);
 		String desplaHexa = Integer.toHexString(desplaza);
-		String digitoExtra = desplaHexa.charAt(desplaHexa.length()-1) + "";
-		int flag = Integer.parseInt(flag0 + "" + df + "" + mf,2);
+		String digitoExtra = desplaHexa.charAt(desplaHexa.length() - 1) + "";
+		int flag = Integer.parseInt(flag0 + "" + df + "" + mf, 2);
 		String flagL = Integer.toHexString(flag) + digitoExtra;
-		if (desplaHexa.length()<2) {
-			desplaHexa+= "0";
+		if (desplaHexa.length() < 2) {
+			desplaHexa += "0";
 		}
-		arrSalida[0]=flagL;
-		arrSalida[1]=desplaHexa.substring(0,2);
+		arrSalida[0] = flagL;
+		arrSalida[1] = desplaHexa.substring(0, 2);
 		return arrSalida;
 	}
-	
+
 	public boolean esNumero(String n) {
-        try {
-            Integer.parseInt(n);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-	
+		try {
+			Integer.parseInt(n);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	public int generarIdentificacion() {
-		return (int) Math.floor(Math.random()*(65535-0+1)+0);
-    }
+		return (int) Math.floor(Math.random() * (65535 - 0 + 1) + 0);
+	}
 
 	public int generarTiempoDeVida() {
-		return (int) Math.floor(Math.random()*(255-0+1)+0);
-    }
+		return (int) Math.floor(Math.random() * (255 - 0 + 1) + 0);
+	}
 }
