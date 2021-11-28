@@ -29,7 +29,7 @@ public class Logica {
 		}
 	}
 
-	private static List<String[]> ordenHexa(List<String[]> listaHexa) {
+	public static List<String[]> ordenHexa(List<String[]> listaHexa) {
 		List<String[]> listaHexadecimal = new ArrayList<String[]>();
 		for (String[] strings : listaHexa) {
 			String[] hexa = new String[20];
@@ -58,7 +58,7 @@ public class Logica {
 		return listaHexadecimal;
 	}
 
-	private static List<int[]> ordenarEncabezado(List<Fragmento> frags) {
+	public static List<int[]> ordenarEncabezado(List<Fragmento> frags) {
 		List<int[]> listaDecimal = new ArrayList<>();
 		for (Fragmento fragmento : frags) {
 			int encabezado[] = new int[20];

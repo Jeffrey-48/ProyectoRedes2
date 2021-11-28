@@ -1,11 +1,13 @@
 package gui;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
 import fragmentacion.Datagrama;
+import fragmentacion.Fragmento;
 import fragmentacion.Logica;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -124,6 +126,26 @@ public class VentanaPrincipal implements Initializable {
 
 			Datagrama datagrama = new Datagrama(longTotal, protocolo, direccionOrigen, direccionDestino, identificacion,
 					tiempoVida, mtu);
+			int cant = (int) Math.ceil(((double) longTotal) / ((double) mtu));
+			List<Fragmento> frags = logica.fragmentar(datagrama, cant, mtu);
+			List<int[]> listaDecimal = logica.ordenarEncabezado(frags);
+			List<String[]> listaHexa = logica.convertirHexadecimal(listaDecimal);
+			List<String[]> listaHexaOrder = logica.ordenHexa(listaHexa);
+			int cont = 0;
+			String mensaje = "";
+			for (String[] strings : listaHexaOrder) {
+				for (int i = 0; i < strings.length; i++) {
+					mensaje += strings[i] + " ";
+					if (i==6) {
+						String[] fl = logica.flagDes.get(cont);
+						strings[6]=fl[0];
+						strings[7]=fl[1];
+					}
+				}
+				mensaje += "\n";
+				cont++;
+			}
+			txtAreaResultados.setText(mensaje);
 		} else {
 			JOptionPane.showMessageDialog(null, "Datos Incorrectos, verifique.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
